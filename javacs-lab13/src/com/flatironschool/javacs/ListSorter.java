@@ -63,9 +63,53 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+
+		int size = list.size();
+
+		// Base Case
+		if (size <= 1) {
+			return list;
+		}
+
+		// Divide and conquer
+		List<T> sublist1 = new LinkedList<T>(list.subList(0, size/2));
+		List<T> sublist2 = new LinkedList<T>(list.subList(size/2, size));
+
+		List<T> firstHalf = mergeSort(sublist1, comparator);
+		List<T> secondHalf = mergeSort(sublist2, comparator);
+
+		// Merge them back
+		List<T> sorted = new LinkedList<T>();
+
+		for (int i = 0; i < size; i++) {
+
+			List<T> bigger = bigger(firstHalf, secondHalf, comparator);
+			sorted.add(bigger.remove(0));
+		}
+
+		return sorted;
 	}
+
+	private List<T> bigger(List<T> firstList, List<T> secondList, Comparator<T> comparator) {
+
+		
+		// Easy to pick if they're empty
+		if (firstList.size() == 0) 
+			return secondList;		
+
+		if (secondList.size() == 0) 
+			return firstList;
+
+		int result = comparator.compare(firstList.get(0), secondList.get(0));
+
+		if (result > 0) 
+			return secondList;
+		
+		if (result < 0) 
+			return firstList;
+
+		return firstList;
+	} 
 
 	/**
 	 * Sorts a list using a Comparator object.
@@ -75,7 +119,17 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
+
+		int size = list.size();
+        PriorityQueue<T> heap = new PriorityQueue<T>(size, comparator);
+		heap.addAll(list);
+
+		list.clear();
+
+		for(int i = 0; i < size; i++) {
+
+			list.add(heap.poll());
+		}
 	}
 
 	
@@ -89,8 +143,24 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+        
+        int size = list.size();
+
+        PriorityQueue<T> heap = new PriorityQueue<T>(size, comparator);
+
+        heap.addAll(list);
+
+        List<T> topElements = new LinkedList<T>();
+
+        for(int i=0; i<size-k; i++) {
+        	heap.poll();
+        }
+
+        while(!heap.isEmpty()) {
+        	topElements.add(heap.poll());
+        }
+
+        return topElements;
 	}
 
 	
